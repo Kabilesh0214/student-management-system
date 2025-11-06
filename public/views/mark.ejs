@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marks</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="nav-bar">
+    <img src="../images/school.jpg" alt="school logo" id="school-logo">
+    <h1>Joseph's School</h1>
+    <form action="/student" method="get"><button type="submit">Student</button></form>
+    <form action="/attendance" method="get"><button type="submit">Attendance</button></form>
+    <form action="/mark" method="get"><button type="submit" style=" color : white; text-decoration: underline;">Mark</button></form>
+    <button onclick="createProfileAlert();"><img src="../images/profile.webp" alt="" style="height: 35px; border-radius: 50%;"></button>
+  </div>
+  <div id="logoutbtn" hidden>
+    <form action="/logout" method="get" id="logout"><button onclick="logout(event);" style="color: white; background-color: red;">Logout</button></form>
+  </div>
+
+    <div id="add">
+      <form action="/addmark" method="post" id="input-form1">
+        <select name="register_number" id="name" class="select-name">
+          <option value="">Name</option>
+          <% for (let i = 0; i < name.length; i++) {%>
+          <option value="<%= name[i].register_number %>" title="<%= name[i].register_number %>"<%= editRegisterNumber === name[i].register_number ? 'selected' : '' %>><%= name[i].first_name + " " + name[i].last_name %></option>
+          <% } %>
+        </select>
+        <table>
+          <tr>
+            <th>Tamil</th>
+            <th>English</th>
+            <th>Maths</th>
+            <th>Science</th>
+            <th>Social science</th>
+            <th>Total</th>
+          </tr>
+          <tr>
+            <td><input type="number" id="tamil" name="tamil" value="<%= editTamil %>"></td>
+            <td><input type="number" id="english" name="english" value="<%= editEnglish %>"></td>
+            <td><input type="number" id="maths" name="maths" value="<%= editMaths %>"></td>
+            <td><input type="number" id="science" name="science" value="<%= editScience %>" ></td>
+            <td><input type="number" id="social-science" name="social_science" value="<%= editSocialScience %>" ></td>
+            <td><p id="total"><%= editTotal %></p> <input type="number" id="hidden-total" name="total"  value="<%= editTotal %>" hidden></td>
+          </tr>
+        </table>
+        <p id="mark-error"></p>
+        <% if (editTamil === "") { %>
+          <button onclick="addNewMark(event,'new');" id="save-mark">Save</button>
+        </form>
+      </div>
+      
+        <% }else { %>
+        </form>
+        <form action="/editmark/<%= editRegisterNumber %>" method="post" id="edit-form">
+          <input type="number" id="edit_tamil" name="hiddenTamil" value="<%= editTamil %>" hidden>
+          <input type="number" id="edit_english" name="hiddenEnglish" value="<%= editEnglish %>" hidden>
+          <input type="number" id="edit_maths" name="hiddenMaths" value="<%= editMaths %>" hidden>
+          <input type="number" id="edit_science" name="hiddenScience" value="<%= editScience %>" hidden>
+          <input type="number" id="edit_social_science" name="hiddenSocialScience" value="<%= editSocialScience %>" hidden>
+          <input type="number" id="edit_total" name="hiddenTotal" value="<%= editTotal %>" hidden>
+          <button onclick="editMark(event);" class="addd center">Submit</button>
+        </form>
+        <form action="/markcancel" method="get" class="center"><button >Cancel</button></form>
+        <% } %>
+    
+    
+    <div>
+      <table id="mark-table">
+        <tr>
+          <th>Register number</th>
+          <th>Name</th>
+          <th>Tamil</th>
+          <th>English</th>
+          <th>Maths</th>
+          <th>Science</th>
+          <th>Social science</th>
+          <th>Total</th>
+          <th>Grade</th>
+          <th>Action</th>
+        </tr>
+        <% mark.forEach ((user, index) => { %>
+          <tr>
+            <td><p class="register-number"><%= user.register_number %></p></td>
+            <td><p class="name"><%= user.first_name + " " + user.last_name %></p></td>
+            <td><%= user.tamil %></td>
+            <td><%= user.english %></td>
+            <td><%= user.maths %></td>
+            <td><%= user.science %></td>
+            <td><%= user.social_science %></td>
+            <td><%= user.total %></td>
+            <td><%= user.grade %></td>
+            <td><div id="edit-delete-buttons" style="background-color: transparent;">
+              <form action="/getmarkforedit/<%= user.register_number %>" method="post"><button type="submit" id="edit-btn">Edit</button></form>
+              <form action="/deletemark" method="post">
+                <input name= "register_number" value="<%= user.register_number %>" hidden>
+                <button type="submit" id="delete-btn">Delete</button>
+              </form>
+            </div></td>
+            
+        <% }); %>
+        
+    </div>
+
+  <script>
+    let active = false;
+    function createProfileAlert() {
+      if(active) {
+        document.querySelector("#logoutbtn").hidden = true;
+        active = false;
+      }else {
+        document.querySelector("#logoutbtn").hidden = false;
+        active = true;
+      }
+    }
+    const name = document.querySelector("#name");
+    const tamil = document.querySelector("#tamil");
+    const english = document.querySelector("#english");
+    const maths = document.querySelector("#maths");
+    const science = document.querySelector("#science");
+    const socialScience = document.querySelector("#social-science");
+    const total = document.querySelector("#total");
+    const hiddenTotal = document.querySelector("#hidden-total");
+    const error = document.getElementById("mark-error")
+  
+    const input = document.querySelectorAll("input");
+    input.forEach((element, index) => {
+      element.addEventListener ("input", () => {
+      total.innerHTML = Number(tamil.value) + Number(english.value) + Number(maths.value) + Number(science.value) + Number(socialScience.value);
+      hiddenTotal.value = Number(tamil.value) + Number(english.value) + Number(maths.value) + Number(science.value) + Number(socialScience.value);
+    });});
+
+    let studArray = [];
+    setTimeout(() => {
+      const names = document.querySelectorAll(".register-number");
+      names.forEach((singleName) => {
+        studArray.push(singleName.textContent.trim());
+      });}, 1000);
+    
+    
+    function addNewMark (event, action) {
+      event.preventDefault();  
+      error.innerText = "";
+      const selectedStudent = name.value;
+      let isValid = true;
+      const subjects = ["tamil", "english", "maths", "science", "social-science"];
+      for (let subject of subjects) {
+        const mark = document.getElementById(subject).value;
+        if(selectedStudent === ""){
+          error.innerHTML = "Select the name of the student";
+          isValid = false;
+        } else if (mark === "") {
+          error.innerHTML = "Enter marks for every subjects";
+          isValid = false;
+        } else if (mark < 0 || mark > 100) {
+          error.innerHTML = "Mark should be between 0 and 100";
+          isValid = false;
+        }
+      }
+      if (action === "new") {
+        if(studArray.includes(selectedStudent)){
+          error.innerHTML = "Mark of the student already exists"
+          isValid = false;
+        }
+        if(isValid){
+          studArray.push(selectedStudent);
+          document.querySelector("#input-form1").submit();
+        }
+      }
+    }
+
+    let form = document.getElementById("input-form1");
+    let editTamil = document.querySelector("#edit_tamil");
+    let editEnglish = document.querySelector("#edit_english");
+    let editMaths = document.querySelector("#edit_maths");
+    let editScience = document.querySelector("#edit_science");
+    let editSocialScience = document.querySelector("#edit_social_science");
+    let editTotal = document.querySelector("#edit_total");
+
+    form.addEventListener("input", function (event) {
+      event.preventDefault();
+      editTamil.value = tamil.value;
+      editEnglish.value = english.value;
+      editMaths.value = maths.value;
+      editScience.value = science.value;
+      editSocialScience.value = socialScience.value;
+      editTotal.value = Number(editTamil.value) + Number(editEnglish.value) + Number(editMaths.value) + Number(editScience.value) + Number(editSocialScience.value);
+    });
+
+  function editMark(event) {
+    event.preventDefault();
+
+    const error = document.getElementById("mark-error");
+    error.innerHTML = "";
+    const subjects = ["edit_tamil", "edit_english", "edit_maths", "edit_science", "edit_social_science"];
+    let isValid = true;
+    const selectedStudent = document.getElementById("name").value;
+    for (let subject of subjects) {
+      const mark = Number(document.getElementById(subject).value);
+      if (selectedStudent === "") {
+        error.innerHTML = "Select the name of the student";
+        isValid = false;
+        break;
+      } else if (isNaN(mark) || document.getElementById(subject).value === "") {
+        error.innerHTML = "Enter marks for every subject";
+        isValid = false;
+        break;
+      } else if (mark < 0 || mark > 100) {
+        error.innerHTML = "Mark should be between 0 and 100";
+        isValid = false;
+        break;
+      }
+    }
+    if (isValid) {
+      document.querySelector("#edit-form").submit();
+    }
+  }
+
+  function logout (event) {
+    event.preventDefault();
+    localStorage.setItem("token", "");
+    document.querySelector("#logout").submit();
+  }
+
+  const  tokenCheck = localStorage.getItem("token");
+  if (tokenCheck !== "123456789"){
+    document.body.innerHTML = `<h1>You don't have access without logging in</h1>
+    <h2>Please login to continue </h2> <a href='http://localhost:3000/login'>Login</a>`;
+  }
+  </script>
+</body>
+</html>

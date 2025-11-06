@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attendance</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div>
+    <div class="nav-bar">
+      <img src="../images/school.jpg" alt="school logo" id="school-logo">
+      <h1>Joseph's School</h1>
+      <form action="/student" method="get"><button type="submit">Student</button></form>
+      <form action="/attendance" method="get"><button type="submit" style=" color : white; text-decoration: underline;">Attendance</button></form>
+      <form action="/mark" method="get"><button type="submit">Mark</button></form>
+      <button onclick="createProfileAlert();"><img src="../images/profile.webp" alt="" style="height: 35px; border-radius: 50%;"></button>
+    </div>
+    <div id="logoutbtn" hidden>
+      <form action="/logout" method="get" id="logout"><button onclick="logout(event);" style="color: white; background-color: red;">Logout</button></form>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Register number</th>
+      <th>Student name</th>
+      <th>Present</th>
+      <th>Absent</th>
+    </tr>
+    <% for (let i = 0; i < userData.length; i++) {%>
+      <tr>  
+        <td><%= userData[i].register_number %></td>
+        <td><%= userData[i].first_name + " " + userData[i].last_name %></td>
+        <td><input type="radio" name="attendance of<%=  userData[i].register_number  %>" id="<%= userData[i].register_number %>present" value="present" ></td>
+        <td><input type="radio" name="attendance of<%=  userData[i].register_number %>" id="<%= userData[i].register_number %>absent" value="absent"></td>
+      </tr>
+      <% } %>
+      <div class="result">
+        <p>Number of present: </p> <span id="totalPresent"></span>
+        <p>Number of absent: </p> <span id="totalAbsent"></span>
+        <p>Total:</p> <span class="total"></span>
+      </div>
+
+  <script>
+    let active = false;
+    function createProfileAlert() {
+      if(active) {
+        document.querySelector("#logoutbtn").hidden = true;
+        active = false;
+      }else {
+        document.querySelector("#logoutbtn").hidden = false;
+        active = true;
+      }
+    }
+
+    function totalAttendance(){
+      let PresentCount = 0;
+      let AbsentCount = 0;
+      const totalPresent =  document.getElementById('totalPresent');
+      const totalAbsent =  document.getElementById('totalAbsent');
+      const total = document.querySelector('.total');
+      const radios = document.querySelectorAll('input[type="radio"]');
+
+      radios.forEach(radio =>{
+        if(radio.checked){
+          if(radio.value == "present"){
+            PresentCount ++;
+          }else if(radio.value == "absent"){
+            AbsentCount ++;
+          }
+        }
+      });
+
+      totalAbsent.textContent = AbsentCount;
+      totalPresent.textContent = PresentCount;
+      total.textContent = AbsentCount + PresentCount;
+
+
+      radios.forEach(radio => {
+      radio.addEventListener('change', totalAttendance);
+      });
+    }
+
+    function logout (event) {
+    event.preventDefault();
+    localStorage.setItem("token", "");
+    document.querySelector("#logout").submit();
+  }
+
+    const  tokenCheck = localStorage.getItem("token");
+    totalAttendance();
+    if (tokenCheck !== "123456789"){
+      document.body.innerHTML = `<h1>You don't have access without logging in</h1>
+      <h2>Please login to continue </h2> <a href='http://localhost:3000/login'>Login</a>`;
+  }
+    </script>
+  </body>
+</html>

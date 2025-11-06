@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <% if (token === "123456789"){ %>
+  <p id="token" hidden><%= token %></p>
+  <% } %>
+  <div class="nav-bar">
+    <img src="../images/school.jpg" alt="school logo" id="school-logo">
+    <h1>Joseph's School</h1>
+    <form action="/student" method="get"><button type="submit" style=" color : white; text-decoration: underline;">Student</button></form>
+    <form action="/attendance" method="get"><button type="submit">Attendance</button></form>
+    <form action="/mark" method="get"><button type="submit">Mark</button></form>
+    <button onclick="createProfileAlert();"><img src="../images/profile.webp" alt="" style="height: 35px; border-radius: 50%;"></button>
+  </div>
+  <div id="logoutbtn" hidden>
+    <form action="/logout" method="get" id="logout"><button onclick="logout(event);" style="color: white; background-color: red;">Logout</button></form>
+  </div>
+
+  <% if (editId === "") { %>
+  <!-- Add -->
+  <button onclick="popup();" id="addbtn">+ Add Student</button>
+  <div id="pop-up" hidden>
+    <div class="add-form">
+    <form action="/add"  method="post" id="form">
+      <label for="register_number">Register number</label>
+      <input type="number"  name="register_number" id="register_number" value="<%= registerNumber %>">
+      <p class="register_number_error error"></p>
+      
+      
+      <label for="first_name">First name</label>
+      <input type="text" maxlength="25" name="first_name" id="first_name" value="<%= firstName %>">
+      <p class="first_name_error error"></p>
+      
+      <label for="last_name">Last name</label>
+      <input type="text" maxlength="25" name="last_name" id="last_name" value="<%= lastName %>">
+      <p class="last_name_error error"></p>
+      
+      <pre><label for="email">Email</label>
+<input type="text" maxlength="25" name="email" id="email" value="<%= email %>"></pre>
+      <p class="email_error error"></p>
+      
+      <label for="phone_number">Phone number</label>
+      <input type="number" name="phone_number" id="phone_number" value="<%= phoneNumber %>">
+      <p class="phone_number_error error"></p>
+      
+      <label for="dob">Date of Birth</label>
+      <input type="date" name="dob" id="dob" required value="<%= DOB %>">
+      <p class="date_of_birth_error error"></p>
+      
+      <label for="gender">Gender</label>
+      <input type="radio" name="gender" id="gender" value="Male" <%= gender === "Male" ? "checked" : "" %>>Male
+      <input type="radio" name="gender" id="gender" value="Female" <%= gender === "Female" ? "checked" : "" %>>Female
+      <input type="radio" name="gender" id="gender" value="Other" <%= gender === "Other" ? "checked" : "" %>>Other
+      <p class="gender_error error"></p>
+      
+      <label for="address">Address</label>
+      <textarea name="address" id="address" maxlength="150" required value="<%= address %>"></textarea>
+      <p class="address_error error"></p>
+        <button onclick="newValidation(event);" class="add-edit-btn addd">Add</button>
+        </form>
+        <form action="/cancel" method="get"><button method="submit" class="cancel">Cancel</button></form> 
+       </div>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Register number</th>
+      <th>Student name</th>
+      <th>Action</th>
+    </tr>
+    <% for (let i = 0; i < userData.length; i++) {%>
+    <tr>  
+      <td><%= userData[i].register_number %></td>
+      <td><%= userData[i].first_name + " " + userData[i].last_name %></td>
+      <td>
+       <div id="edit-delete-buttons"><form action="/edit/<%= userData[i].id %>" method="post" id="edit-button-form"><button onclick="editDisplay(event);" id="edit-btn">Edit</button></form>
+        <form action="/delete/<%= userData[i].id %>" method="post"><button type="submit" id="delete-btn">Delete</button></form></div> 
+      </td>
+    </tr>
+    <% } %>
+  </table>
+  <% } %>
+
+  <!-- edit -->
+
+  <div id="edit-pop-up" hidden>
+    <div class="edit-form">
+    <form action="/update/<%= editId %>"  method="post" id="edit-form">
+      <label for="register_number">Register number</label>
+      <input type="number"  name="edit_register_number" id="edit_register_number" value="<%= editRegisterNumber %>">
+      <p class="edit_register_number_error edit-error error"></p>
+      
+      
+      <label for="first_name">First name</label>
+      <input type="text" maxlength="25" name="edit_first_name" id="edit_first_name" value="<%= editFirstName %>">
+      <p class="edit_first_name_error edit-error error"></p>
+      
+      <label for="last_name">Last name</label>
+      <input type="text" maxlength="25" name="edit_last_name" id="edit_last_name" value="<%= editLastName %>">
+      <p class="edit_last_name_error edit-error error"></p>
+      
+      <pre><label for="email">Email</label>
+<input type="text" maxlength="25" name="edit_email" id="edit_email" value="<%= editEmail %>"></pre>
+      <p class="edit_email_error edit-error error"></p>
+      
+      <label for="phone_number">Phone number</label>
+      <input type="number" name="edit_phone_number" id="edit_phone_number" value="<%= editPhoneNumber %>">
+      <p class="edit_phone_number_error edit-error error"></p>
+      
+      <label for="dob">Date of Birth</label>
+      <input type="date" name="edit_dob" id="edit_dob" required value="<%= editDOB %>">
+      <p class="edit_date_of_birth_error edit-error error"></p>
+      
+      <label for="gender">Gender</label>
+      <input type="radio" name="edit_gender" id="edit_gender" value="Male" <%= editGender === "Male" ? "checked" : "" %>>Male
+      <input type="radio" name="edit_gender" id="edit_gender" value="Female" <%= editGender === "Female" ? "checked" : "" %>>Female
+      <input type="radio" name="edit_gender" id="edit_gender" value="Other" <%= editGender === "Other" ? "checked" : "" %>>Other
+      <p class="edit_gender_error edit-error error"></p>
+      
+      <label for="address">Address</label>
+      <textarea name="edit_address" id="edit_address" maxlength="150" required value="<%= address %>"><%= editAddress %></textarea>
+      <p class="edit_address_error edit-error error"></p>
+      
+      <button onclick="editValidation(event)" class="add-edit-btn addd">Save</button>
+    </form>
+    <form action="/cancel" method="get"><button method="submit">Cancel</button></form>
+  </div>
+</div>
+
+  <script>
+    
+    let active = false;
+    function createProfileAlert() {
+      if(active) {
+        document.querySelector("#logoutbtn").hidden = true;
+        active = false;
+      }else {
+        document.querySelector("#logoutbtn").hidden = false;
+        active = true;
+      }
+    }
+
+    let addUser = false;
+    function popup() {
+      if (addUser) {
+        document.querySelector("#pop-up").hidden = true;
+        document.querySelector("#addbtn").hidden = false;
+        document.querySelector("table").hidden = false;
+        document.querySelector("#edit-pop-up").hidden = false;
+        addUser = false;
+      }else {
+        document.querySelector("#pop-up").hidden = false;
+        document.querySelector("#addbtn").hidden = true;
+        document.querySelector("table").hidden = true;
+        document.querySelector("#edit-pop-up").hidden = true;
+        addUser = true;
+      }
+    }
+
+    const registerNumberInput = document.getElementById("register_number");
+    const firstNameInput = document.getElementById("first_name");
+    const emailInput = document.getElementById("email");
+    const phoneNumberInput = document.getElementById("phone_number");
+    const dobInput = document.getElementById("dob");
+    const addressInput = document.getElementById("address");
+
+    const registerNumberError = document.querySelector(".register_number_error");
+    const firstNameError = document.querySelector(".first_name_error");
+    const emailError = document.querySelector(".email_error");
+    const phoneNumberError = document.querySelector(".phone_number_error");
+    const dateOfBirthError = document.querySelector(".date_of_birth_error");
+    const genderError = document.querySelector(".gender_error");
+    const addressError = document.querySelector(".address_error");
+
+    const emailRegex =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+    
+    function newValidation(event) {
+      event.preventDefault();
+      
+      let isValid = true; 
+      registerNumberError.innerHTML = "";
+      firstNameError.innerHTML = "";
+      emailError.innerHTML = "";
+      phoneNumberError.innerHTML = "";
+      dateOfBirthError.innerHTML = "";
+      genderError.innerHTML = "";
+      addressError.innerHTML = "";
+
+      const registerNumberVal = registerNumberInput.value;
+      const firstNameVal = firstNameInput.value;
+      const emailVal = emailInput.value;
+      const phoneNumberVal = phoneNumberInput.value;
+      const dobVal = dobInput.value;
+      const addressVal = addressInput.value;
+      const genderSelected = document.querySelector('input[name="gender"]:checked');
+
+
+      if (String(registerNumberVal).length !== 12) {
+        registerNumberError.innerHTML = "Register number must contain 12 digits";
+        isValid = false;
+      }
+      
+      if (firstNameVal.trim() === "") {
+        firstNameError.innerHTML = "First name is required";
+        isValid = false;
+      } else if (firstNameVal.trim().length < 4) {
+        firstNameError.innerHTML = "First name must contain at least 4 characters";
+        isValid = false;
+      }
+
+      if (emailVal.trim() === "") {
+        emailError.innerHTML = "Email field is required";
+        isValid = false;
+      } else if (!emailRegex.test(emailVal)) {
+        emailError.innerHTML = "Invalid email format";
+        isValid = false;
+      }
+
+      if (String(phoneNumberVal).length !== 10) {
+        phoneNumberError.innerHTML = "Invalid phone number (must be 10 digits)";
+        isValid = false;
+      }
+
+      if (dobVal === "") {
+        dateOfBirthError.innerHTML = "Date of Birth is required";
+        isValid = false;
+      } else {
+        const dobDate = new Date(dobVal);
+        if (dobDate >= today) { 
+          dateOfBirthError.innerHTML = "Date cannot be today or in the future";
+          isValid = false;
+        }
+      }
+
+      if (!genderSelected) {
+        genderError.innerHTML = "Please select your gender";
+        isValid = false;
+      }
+
+      if (addressVal.trim().length < 10) {
+        addressError.innerHTML = "Please enter your full address (at least 10 characters)";
+        isValid = false
+      }
+    
+      if(isValid) { 
+        document.querySelector("#form").submit();
+      }
+    }
+    
+    if(document.querySelector("#edit_register_number").value !== "") {
+      document.querySelector("#edit-pop-up").hidden = false;
+    }
+
+    let editUser = false;
+    function editValidation(event) {
+    event.preventDefault();
+
+    let editIsValid = true;
+
+    const editRegisterNumberInput = document.getElementById("edit_register_number");
+    const editFirstNameInput = document.getElementById("edit_first_name");
+    const editEmailInput = document.getElementById("edit_email");
+    const editPhoneNumberInput = document.getElementById("edit_phone_number");
+    const editDobInput = document.getElementById("edit_dob");
+    const editAddressInput = document.getElementById("edit_address");
+
+    const editRegisterNumberError = document.querySelector(".edit_register_number_error");
+    const editFirstNameError = document.querySelector(".edit_first_name_error");
+    const editEmailError = document.querySelector(".edit_email_error");
+    const editPhoneNumberError = document.querySelector(".edit_phone_number_error");
+    const editDateOfBirthError = document.querySelector(".edit_date_of_birth_error");
+    const editGenderError = document.querySelector(".edit_gender_error");
+    const editAddressError = document.querySelector(".edit_address_error");
+
+    const editRegisterNumberVal = editRegisterNumberInput.value;
+    const editFirstNameVal = editFirstNameInput.value;
+    const editEmailVal = editEmailInput.value;
+    const editPhoneNumberVal = editPhoneNumberInput.value;
+    const editDobVal = editDobInput.value;
+    const editAddressVal = editAddressInput.value;
+    const editGenderSelected = document.querySelector('input[name="edit_gender"]:checked');
+
+    editRegisterNumberError.innerHTML = "";
+    editFirstNameError.innerHTML = "";
+    editEmailError.innerHTML = "";
+    editPhoneNumberError.innerHTML = "";
+    editDateOfBirthError.innerHTML = "";
+    editGenderError.innerHTML = "";
+    editAddressError.innerHTML = "";
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (String(editRegisterNumberVal).length !== 12) {
+      editRegisterNumberError.innerHTML = "Register number must contain 12 digits";
+      editIsValid = false;
+    }
+
+    if (editFirstNameVal.trim() === "") {
+      editFirstNameError.innerHTML = "First name is required";
+      editIsValid = false;
+    } else if (editFirstNameVal.trim().length < 4) {
+      editFirstNameError.innerHTML = "First name must contain at least 4 characters";
+      editIsValid = false;
+    }
+
+    if (editEmailVal.trim() === "") {
+      editEmailError.innerHTML = "Email field is required";
+      editIsValid = false;
+    } else if (!emailRegex.test(editEmailVal)) {
+      editEmailError.innerHTML = "Invalid email format";
+      editIsValid = false;
+    }
+
+    if (String(editPhoneNumberVal).length !== 10) {
+      editPhoneNumberError.innerHTML = "Invalid phone number (must be 10 digits)";
+      editIsValid = false;
+    }
+
+    if (editDobVal === "") {
+      editDateOfBirthError.innerHTML = "Date of Birth is required";
+      editIsValid = false;
+    } else {
+      const dobDate = new Date(editDobVal);
+      if (dobDate >= today) {
+        editDateOfBirthError.innerHTML = "Date cannot be today or in the future";
+        editIsValid = false;
+      }
+    }
+
+    if (!editGenderSelected) {
+      editGenderError.innerHTML = "Please select your gender";
+      editIsValid = false;
+    }
+
+    if (editAddressVal.trim().length < 10) {
+      editAddressError.innerHTML = "Please enter your full address (at least 10 characters)";
+      editIsValid = false;
+    }
+
+    if (editIsValid) {
+      document.querySelector("#edit-form").submit();
+    }
+  }
+  const token = document.querySelector("#token");
+  if(token){
+  localStorage.setItem("token", token.innerHTML);
+  }
+
+  function logout (event) {
+    event.preventDefault();
+    localStorage.setItem("token", "");
+    document.querySelector("#logout").submit();
+  }
+
+  const  tokenCheck = localStorage.getItem("token");
+  if (tokenCheck !== "123456789"){
+    document.body.innerHTML = `<h1>You don't have access without logging in</h1>
+    <h2>Please login to continue </h2> <a href='http://localhost:3000/login'>Login</a>`;
+  }
+
+  function editDisplay (event) {
+    event.preventDefault();
+    document.querySelector("#pop-up").hidden = true;
+    document.querySelector("#addbtn").hidden = true;
+    document.querySelector("table").hidden = true;
+    document.querySelector("#edit-pop-up").hidden = false;
+    document.querySelector("#edit-button-form").submit();
+  }
+  </script>
+</body>
+</html>

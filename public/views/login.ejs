@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <div class="register">
+    <form action="/pass_check" method="post" id="form" class="register-form login-form">
+      <h3>Login</h3>
+      <label for="Email">Email:</label>
+      <input type="text" name="Email" required value="<%= email  %>">
+      <br>
+      <label for="password" required>Password:</label>
+      <input type="password" name="Password" required value="<%= password %>">
+      <p class="password_incorrect_message error">
+      <%= error %></p>
+      <button type="submit">Login</button>
+    </form>
+    <form action="/" method="get"><p>I don't have an account <button type="submit">Register</button></p></form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+body{
+  background-color: #FFFD8F;
+  margin : 0;
+}
+input{
+  height: 30px;
+  width: 300px;
+  border : none;
+  border-radius: 5px;
+}
+label, p, input, td, button, th, h1, h3 {
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+h1, h3 {
+  font-weight: 700;
+}
+button {
+  height: 30px;
+  width: 150px;
+  background-color: #EFF5D2;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.error {
+  color : red;
+  font-size: 13px;
+}
+.register-form{
+  background-color: #B0CE88;
+  display: flex;
+  flex-direction: column;
+  width: 400px;;
+  height: 450px; 
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+.register{
+  margin-top: 200px;
+  margin-left: 500px;
+}
+.nav-bar {
+  display: flex;
+  margin: none;
+  align-items: center;
+  gap: 10px;
+  background-color: #4C763B;
+  padding: 10px 20px;
+  color: white;
+}
+
+#school-logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 4px;
+}
+.nav-bar h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  flex-grow: 1;
+}
+#logoutbtn {
+  float: right;
+  background-color: #EFF5D2;
+  padding : 10px;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.nav-bar button{
+  background-color : transparent;
+  color: #FFFD8F;
+  font-size: 15px;
+  margin : none;
+  width : 100px;
+}
+#addbtn{
+  background-color: rgb(41, 131, 41);
+  color: white;
+  margin : 20px;
+}
+table {
+  background-color: #043915;
+  color : white;
+  margin : 100px 375px 0px 375px;
+  width: 700px;
+  border : none;
+  border-radius : 5px;
+}
+td{
+  background-color : #B0CE8850;
+  height: 40px;
+  border : none;
+  border-radius : 5px;
+}
+th{
+  height: 40px;
+}
+#edit-delete-buttons{
+  display: flex;
+  gap : 5px;
+  justify-content: space-around;
+}
+#edit-btn{
+  background-color: rgba(253, 253, 9, 0.698);
+}
+#delete-btn{
+  background-color: rgb(229, 68, 68);
+}
+.result{
+  background-color: #B0CE88;
+  width : 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid yellow;
+  border-radius: 5px;
+  padding-bottom: 20px;
+  margin: 20px 600px;
+}
+input[type="radio"]{
+  height: 20px;
+  width: 30px;
+}
+span{
+  border: 1px solid black;
+  padding: 10px;
+  background-color: #EFF5D2;
+}
+.select-name{
+  height: 30px;
+  background-color: rgba(0, 128, 30, 0.645);
+  color: white;
+  margin: 20px 370px;
+  cursor: pointer;
+}
+#tamil, #english, #maths, #science, #social-science{
+  width: 80px;
+}
+#save-mark{
+  margin-left: 650px;
+  background-color: #4C763B;
+  color: white;
+}
+#mark-table{
+  width: 1000px;
+  margin-left: 250px;
+}
+#mark-error{
+  color: red;
+  font-size: 15px;
+  margin-left: 600px;
+}
+.edit-form, .add-form{
+  background-color: #B0CE88;
+  width: 350px;
+  border-radius: 10px;
+  margin: 50px 550px;
+  padding: 20px;
+}
+.addd{
+  background-color: #4C763B;
+  color: white;
+  margin-bottom: 10px;
+}
+.login-form{
+  height: 300px;
+}
+.center{
+  margin-left: 650px;
+}

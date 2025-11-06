@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="register">
+  <form action="/register" method="post" id="form" class="register-form">
+  <h3>Register</h3>
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" value="<%= name %>">
+    <p class="name_error_message error"></p>
+
+    <label for="email">email:</label>
+    <input type="text" name="email" id="email" value="<%= email %>">
+    <p class="email_error_message error"><%= emailUniqueError %></p>
+
+    <label for="password">Create password:</label>
+    <input type="password" name="create_password" id="create_password" value=<%=createPassword %>>
+    <br>
+    <label for="password">Confirm password:</label>
+    <input type="password" name="confirm_password" id="confirm_password" value=<%= confirmPassword %>>
+    <p class="password_error_message error"></p>
+
+    <button onclick="checkNewData(event);">Register</button>
+  </form>
+
+  <form action="/login" method="get"><p>Already have an account?<button type="submit">login</button></p></form>
+  </div>
+  <script>
+    function checkNewData() {
+      event.preventDefault();
+      let isValid = true;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      const name = document.querySelector("#name").value;
+      const email = document.querySelector("#email").value;
+      const createPassword = document.querySelector("#create_password").value;
+      const confirmPassword = document.querySelector("#confirm_password").value;
+
+      const nameErrorMessage = document.querySelector(".name_error_message");
+      const emailErrorMessage = document.querySelector(".email_error_message");
+      const passwordErrorMessage = document.querySelector(".password_error_message");
+      nameErrorMessage.innerHTML = "";
+      emailErrorMessage.innerHTML ="";
+      passwordErrorMessage.innerHTML = "";
+
+      if (name == "") {
+        nameErrorMessage.innerHTML = "Name field is required";
+        isValid = false;
+      }else if (name.length < 4 ) {
+        nameErrorMessage.innerHTML = "Name must contain atleast 4 characters";
+        isValid = false;
+      }
+
+      if(email == "") {
+        emailErrorMessage.innerHTML = "email field is required";
+        isValid = false;
+      } else if (!(emailRegex.test(email))) {
+        emailErrorMessage.innerHTML = "Invalid email";
+        isValid = false;
+      }
+
+      if (createPassword.length < 8 ) {
+        passwordErrorMessage.innerHTML = "Password must contain atleast 8 characters";
+        isValid = false;
+      }
+      if (createPassword !== confirmPassword) {
+        passwordErrorMessage.innerHTML = "Both password does not match";
+        isValid = false;
+      }
+      
+      if(isValid) { 
+        document.querySelector("#form").submit();
+      }
+
+    }
+    function checkData() {
+      event.preventDefault();
+      let isValid = true;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      const name = document.querySelector("#name").value;
+      const email = document.querySelector("#email").value;
+      const createPassword = document.querySelector("#create_password").value;
+      const confirmPassword = document.querySelector("#confirm_password").value;
+
+      const nameErrorMessage = document.querySelector(".name_error_message");
+      const emailErrorMessage = document.querySelector(".email_error_message");
+      const passwordErrorMessage = document.querySelector(".password_error_message");
+      nameErrorMessage.innerHTML = "";
+      emailErrorMessage.innerHTML ="";
+      passwordErrorMessage.innerHTML = "";
+
+      if (name == "") {
+        nameErrorMessage.innerHTML = "Name field is required";
+        isValid = false;
+      }else if (name.length < 4 ) {
+        nameErrorMessage.innerHTML = "Name must contain atleast 4 characters";
+        isValid = false;
+      }
+
+      if(email == "") {
+        emailErrorMessage.innerHTML = "email field is required";
+        isValid = false;
+      } else if (!(emailRegex.test(email))) {
+        emailErrorMessage.innerHTML = "Invalid email";
+        isValid = false;
+      }
+
+      if (createPassword.length < 8 ) {
+        passwordErrorMessage.innerHTML = "Password must contain atleast 8 characters";
+        isValid = false;
+      }
+      if (createPassword !== confirmPassword) {
+        passwordErrorMessage.innerHTML = "Both password does not match";
+        isValid = false;
+      }
+      
+      if(isValid) { 
+        document.querySelector("#form").submit();
+      }
+
+    }
+  </script>
+</body>
+</html>
